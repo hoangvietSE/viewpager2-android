@@ -9,25 +9,16 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.item_fragment.*
 
 class PageFragment private constructor() : Fragment() {
-    private var position: Int? = null
+    private val position: Int
+        get() = arguments?.getInt("position") ?: -1
 
     companion object {
-        fun getInstance(position: Int): PageFragment {
-            val pageFragment = PageFragment()
-            val bundle = Bundle()
-            bundle.putInt("position", position)
-            pageFragment.arguments = bundle
-            return pageFragment
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        getData()
-    }
-
-    private fun getData() {
-        position = arguments?.getInt("position")
+        fun getInstance(position: Int) =
+            PageFragment().apply {
+                arguments = Bundle().apply {
+                    putInt("position", position)
+                }
+            }
     }
 
     override fun onCreateView(
@@ -40,10 +31,10 @@ class PageFragment private constructor() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initPage(position ?: -1)
+        initializePage(position ?: -1)
     }
 
-    fun initPage(position: Int) {
+    fun initializePage(position: Int) {
         tvViewPage.text = "Page ${position}"
         cslViewPage.background = ContextCompat.getDrawable(
             requireContext(), if (position % 2 == 0)
